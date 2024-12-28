@@ -54,139 +54,137 @@ const shareOptions = [
   }
 ]
 
-const episodes = [
-  {
-    id: 4,
-    title: "Épisode 1 : Découvrez Mildy Consulting RH",
-    description: "Dans ce premier épisode, découvrez Mildy Consulting RH, notre approche unique des ressources humaines et notre vision pour l'avenir du travail.",
-    duration: "30 min",
-    date: "28 Décembre 2023",
-    image: "/images/podcast/episode4.jpg",
-    host: "Mildy Consulting RH",
-    audioUrl: null,
-    spotifyUrl: "https://open.spotify.com/episode/55dpWlrfAaVnvy27H8YSdh",
-    transcription: `
-      [00:00] Introduction
-      Bienvenue dans le premier épisode du podcast Mildy Consulting RH...
+interface Episode {
+  id: number
+  title: string
+  description: string
+  duration: string
+  date: string
+  image: string
+  host: string
+  spotifyUrl: string
+}
 
-      [05:00] Notre Vision
-      Chez Mildy Consulting RH, nous croyons en une approche humaine...
-
-      [15:00] Nos Services
-      Découvrez nos services de conseil en ressources humaines...
-
-      [25:00] Conclusion
-      Merci d'avoir écouté ce premier épisode...
-    `,
-    comments: []
-  },
+const episodes: Episode[] = [
   {
     id: 1,
-    title: "Les clés d'une reconversion professionnelle réussie",
-    description: "Découvrez les étapes essentielles pour réussir votre transition professionnelle et les pièges à éviter.",
-    duration: "45 min",
-    date: "15 Mars 2024",
+    title: "Négociation salariale: Obtenez le salaire que vous méritez",
+    description: "Découvrez les clés de la négociation salariale et apprenez à valoriser vos compétences pour obtenir la rémunération que vous méritez.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
     image: "/images/podcast/episode1.jpg",
-    host: "Marie Dupont",
-    audioUrl: "/podcasts/episode1.mp3",
-    spotifyUrl: "https://open.spotify.com/episode/xyz1",
-    transcription: `
-      [00:00] Introduction
-      Bonjour à tous et bienvenue dans ce nouvel épisode...
-
-      [05:30] Les étapes clés
-      La première étape consiste à faire un bilan...
-
-      [15:45] Les erreurs à éviter
-      Attention à ne pas précipiter votre décision...
-
-      [30:00] Témoignages
-      Écoutons maintenant Sarah qui a réussi sa reconversion...
-    `,
-    comments: [
-      {
-        id: 1,
-        author: "Julie M.",
-        date: "16 Mars 2024",
-        content: "Merci pour ces conseils précieux ! La partie sur le bilan de compétences m'a particulièrement aidée."
-      },
-      {
-        id: 2,
-        author: "Thomas L.",
-        date: "15 Mars 2024",
-        content: "Super épisode ! J'aimerais avoir plus de détails sur le financement de la formation."
-      }
-    ]
-  },
-  {
-    id: 2,
-    title: "Comment se démarquer sur le marché du travail en 2024",
-    description: "Les stratégies efficaces pour mettre en valeur vos compétences et attirer l'attention des recruteurs.",
-    duration: "38 min",
-    date: "8 Mars 2024",
-    image: "/images/podcast/episode2.jpg",
-    host: "Jean Martin",
-    audioUrl: "/podcasts/episode2.mp3",
-    spotifyUrl: "https://open.spotify.com/episode/xyz2",
-    transcription: `
-      [00:00] Introduction
-      Dans cet épisode, nous allons explorer les stratégies...
-
-      [08:15] Personal Branding
-      Développer votre marque personnelle est essentiel...
-
-      [20:30] Réseaux Sociaux
-      LinkedIn est devenu un outil incontournable...
-
-      [32:00] Conclusion
-      Pour résumer, voici les points clés à retenir...
-    `,
-    comments: [
-      {
-        id: 1,
-        author: "Marc D.",
-        date: "9 Mars 2024",
-        content: "Excellents conseils sur LinkedIn, j'ai déjà commencé à les appliquer !"
-      }
-    ]
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/55dpWlrfAaVnvy27H8YSdh"
   },
   {
     id: 3,
-    title: "L'art de la négociation salariale",
-    description: "Les techniques pour négocier votre salaire avec confiance et obtenir la rémunération que vous méritez.",
-    duration: "42 min",
-    date: "1 Mars 2024",
+    title: "Entretiens annuel: Révélez votre potentiel",
+    description: "Comment préparer et réussir votre entretien annuel pour mettre en valeur vos réalisations et votre potentiel.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
     image: "/images/podcast/episode3.jpg",
-    host: "Sophie Bernard",
-    audioUrl: "/podcasts/episode3.mp3",
-    spotifyUrl: "https://open.spotify.com/episode/xyz3",
-    transcription: `
-      [00:00] Introduction
-      La négociation salariale est un moment crucial...
-
-      [10:20] Préparation
-      La clé d'une bonne négociation est la préparation...
-
-      [25:45] Techniques de Négociation
-      Voici les phrases à utiliser et à éviter...
-
-      [38:00] Conclusion
-      Rappel des points essentiels...
-    `,
-    comments: [
-      {
-        id: 1,
-        author: "Pierre L.",
-        date: "2 Mars 2024",
-        content: "Ces techniques m'ont permis d'obtenir une augmentation de 15% !"
-      },
-      {
-        id: 2,
-        author: "Marie C.",
-        date: "1 Mars 2024",
-        content: "J'aurais aimé avoir ces conseils plus tôt dans ma carrière."
-      }
-    ]
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/66iERFWagGuqxhezZc6CDL"
+  },
+  {
+    id: 4,
+    title: "Le CV: Votre carte de visite professionnelle",
+    description: "Les secrets pour créer un CV impactant qui retient l'attention des recruteurs et met en valeur votre parcours.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode4.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/4RWuJnaDUrpQ6ZGbjDuDjy"
+  },
+  {
+    id: 5,
+    title: "LinkedIn: Le réseau stratégique pour votre carrière",
+    description: "Optimisez votre présence sur LinkedIn et utilisez-le comme un véritable outil de développement professionnel.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode5.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/0jsuKXPsZUhTW9KtTgVyjV"
+  },
+  {
+    id: 6,
+    title: "L'entretien d'embauche: Le scénario gagnant pour briller",
+    description: "Préparez-vous efficacement pour vos entretiens d'embauche et apprenez à convaincre vos futurs employeurs.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode6.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/5dooAl6C45wV1vfJYA9MMS"
+  },
+  {
+    id: 7,
+    title: "Les documents à conserver: vos jokers",
+    description: "Guide pratique sur les documents professionnels importants à conserver et leur utilité dans votre carrière.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode7.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/7y6ZOKeTrYpwxJaRZd7z0U"
+  },
+  {
+    id: 8,
+    title: "L'art de planifier et d'organiser",
+    description: "Techniques efficaces pour gérer votre temps et organiser votre emploi du temps professionnel.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode8.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/4ybNlh9pGKUYsoPoHyYRrm"
+  },
+  {
+    id: 9,
+    title: "Comment choisir son centre de formation",
+    description: "Guide complet pour sélectionner le centre de formation adapté à vos objectifs professionnels.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode9.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/41yAofHyNFK7s1FALIAX6R"
+  },
+  {
+    id: 10,
+    title: "La stratégie professionnelle",
+    description: "Développez une stratégie efficace pour atteindre vos objectifs de carrière et évoluer professionnellement.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode10.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/2zZKq3PNMkATbfkJuERDBX"
+  },
+  {
+    id: 11,
+    title: "Comment faire ses recherches d'emplois ?",
+    description: "Méthodologie et conseils pratiques pour une recherche d'emploi efficace et ciblée.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode11.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/2zZKq3PNMkATbfkJuERDBX"
+  },
+  {
+    id: 12,
+    title: "La stagnation Professionnelle",
+    description: "Comment identifier et surmonter une période de stagnation dans votre carrière.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode12.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/7CtSI1LNw0BtZeBcgpthJN"
+  },
+  {
+    id: 13,
+    title: "Parlons handicap",
+    description: "Comprendre et faciliter l'inclusion professionnelle des personnes en situation de handicap.",
+    duration: "5 min",
+    date: "7 Décembre 2023",
+    image: "/images/podcast/episode13.jpg",
+    host: "Mildy Consulting RH",
+    spotifyUrl: "https://open.spotify.com/episode/3ii0hrZWj1qDY9jNt5Lqm2"
   }
 ]
 
@@ -254,16 +252,9 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
 
 export default function PodcastPage() {
   const [currentEpisode, setCurrentEpisode] = useState(episodes[0])
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [newComment, setNewComment] = useState("")
-  const [activeTab, setActiveTab] = useState<'comments' | 'transcription'>('comments')
   const [searchTerm, setSearchTerm] = useState("")
-  const [favorites, setFavorites] = useState<number[]>([])
-  const [showShareModal, setShowShareModal] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'favorites'>('all')
-  const [volume, setVolume] = useState(100)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [favorites, setFavorites] = useState<number[]>([])
 
   // Filtrage des épisodes
   const filteredEpisodes = useMemo(() => {
@@ -286,32 +277,6 @@ export default function PodcastPage() {
     return filtered
   }, [searchTerm, selectedFilter, favorites])
 
-  // Estimation du temps de lecture de la transcription
-  const getReadingTime = (text: string) => {
-    const wordsPerMinute = 200
-    const words = text.split(/\s+/).length
-    const minutes = Math.ceil(words / wordsPerMinute)
-    return `${minutes} min de lecture`
-  }
-
-  // Téléchargement de la transcription
-  const downloadTranscription = (episode: typeof episodes[0]) => {
-    const element = document.createElement("a")
-    const file = new Blob([episode.transcription], {type: 'text/plain'})
-    element.href = URL.createObjectURL(file)
-    element.download = `transcription-${episode.title.toLowerCase().replace(/\s+/g, '-')}.txt`
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
-
-  // Formatage du temps audio
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
-  }
-
   // Gestion des favoris
   const toggleFavorite = (episodeId: number, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -320,61 +285,6 @@ export default function PodcastPage() {
         ? prev.filter(id => id !== episodeId)
         : [...prev, episodeId]
     )
-  }
-
-  // Partage sur les réseaux sociaux
-  const shareOnSocial = (platform: string) => {
-    const url = currentEpisode.spotifyUrl
-    const text = `Écoutez "${currentEpisode.title}" sur notre podcast RH`
-    
-    const shareUrls = {
-      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
-    }
-
-    window.open(shareUrls[platform as keyof typeof shareUrls], '_blank')
-  }
-
-  // Copier le lien
-  const copyLink = async (url: string) => {
-    try {
-      await navigator.clipboard.writeText(url)
-      // Vous pouvez ajouter une notification ici
-    } catch (err) {
-      console.error('Erreur lors de la copie:', err)
-    }
-  }
-
-  // Gestion des commentaires
-  const handleComment = (e: React.FormEvent, episodeId: number) => {
-    e.preventDefault()
-    if (!newComment.trim()) return
-
-    const updatedEpisodes = episodes.map(episode => {
-      if (episode.id === episodeId) {
-        return {
-          ...episode,
-          comments: [
-            ...(episode.comments || []),
-            {
-              id: Date.now(),
-              author: "Utilisateur",
-              date: new Date().toLocaleDateString('fr-FR'),
-              content: newComment
-            }
-          ]
-        }
-      }
-      return episode
-    })
-
-    const updatedCurrentEpisode = updatedEpisodes.find(ep => ep.id === episodeId)
-    if (updatedCurrentEpisode) {
-      setCurrentEpisode(updatedCurrentEpisode)
-    }
-
-    setNewComment("")
   }
 
   return (
