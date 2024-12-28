@@ -196,6 +196,41 @@ const platformIcons = {
   heartFill: HeartFillIcon
 }
 
+const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[0], isActive: boolean, onClick: () => void }) => (
+  <div 
+    className={`relative bg-white rounded-xl shadow-md overflow-hidden transition-all cursor-pointer ${
+      isActive ? 'ring-2 ring-bordeaux' : 'hover:shadow-lg'
+    }`}
+    onClick={onClick}
+  >
+    <div className="relative aspect-[4/5] w-full">
+      <Image
+        src={episode.image}
+        alt={episode.title}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+    </div>
+    <div className="p-4">
+      <h3 className="font-heading text-lg text-bordeaux mb-2">{episode.title}</h3>
+      <p className="text-sm text-terre-cuite/80 line-clamp-2 mb-3">
+        {episode.description}
+      </p>
+      <div className="flex items-center justify-between text-xs text-terre-cuite/60">
+        <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4" />
+          <span>{episode.date}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4" />
+          <span>{episode.duration}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
 export default function PodcastPage() {
   const [currentEpisode, setCurrentEpisode] = useState(episodes[0])
   const [isPlaying, setIsPlaying] = useState(false)
@@ -322,379 +357,44 @@ export default function PodcastPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-beige-clair/20 pb-32">
-      {/* Hero Section avec plateformes */}
-      <section className="pt-32 pb-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+    <div className="container py-12">
+      {/* En-tête */}
+      <div className="text-center mb-12">
+        <h1 className="font-heading text-4xl text-bordeaux mb-4">
+          Podcast RH
+        </h1>
+        <p className="text-terre-cuite/80 max-w-2xl mx-auto">
+          Découvrez nos épisodes sur les ressources humaines, le développement professionnel et les tendances du marché du travail.
+        </p>
+      </div>
+
+      {/* Plateformes d'écoute */}
+      <div className="flex justify-center gap-4 mb-12">
+        {socialPlatforms.map(platform => (
+          <a
+            key={platform.name}
+            href={platform.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${platform.color} text-white px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity`}
           >
-            <h1 className="text-4xl md:text-5xl font-heading text-bordeaux mb-6">
-              Notre Podcast RH
-            </h1>
-            <p className="text-xl text-terre-cuite/80 max-w-3xl mx-auto mb-8">
-              Des conversations enrichissantes sur le monde du travail, la carrière et le développement professionnel.
-              Écoutez nos experts partager leurs conseils et expériences.
-            </p>
-            <div className="flex justify-center gap-4">
-              {socialPlatforms.map((platform) => (
-                <Link
-                  key={platform.name}
-                  href={platform.url}
-                  target="_blank"
-                  className={`${platform.color} text-white px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity`}
-                >
-                  <platform.icon className="w-5 h-5" />
-                  <span>{platform.name}</span>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            <platform.icon className="w-5 h-5" />
+            <span>Écouter sur {platform.name}</span>
+          </a>
+        ))}
+      </div>
 
-      {/* Barre de recherche et filtres */}
-      <section className="py-8 px-4 bg-white shadow-sm">
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-terre-cuite/60 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Rechercher un épisode..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-terre-cuite/20 focus:border-terre-cuite"
-              />
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setSelectedFilter('all')}
-                className={`px-4 py-2 rounded-lg ${
-                  selectedFilter === 'all'
-                    ? 'bg-terre-cuite text-white'
-                    : 'bg-beige-clair/20 text-terre-cuite'
-                }`}
-              >
-                Tous
-              </button>
-              <button
-                onClick={() => setSelectedFilter('favorites')}
-                className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                  selectedFilter === 'favorites'
-                    ? 'bg-terre-cuite text-white'
-                    : 'bg-beige-clair/20 text-terre-cuite'
-                }`}
-              >
-                <Heart className="w-4 h-4" />
-                Favoris ({favorites.length})
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Episodes List */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          {filteredEpisodes.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-terre-cuite/80 text-lg">
-                Aucun épisode ne correspond à votre recherche.
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-8">
-              {filteredEpisodes.map((episode, index) => (
-                <motion.div
-                  key={episode.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`bg-white rounded-2xl shadow-lg p-6 cursor-pointer transition-all
-                    ${currentEpisode.id === episode.id ? 'ring-2 ring-terre-cuite' : 'hover:shadow-xl'}`}
-                  onClick={() => setCurrentEpisode(episode)}
-                >
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="relative w-full md:w-48 h-48 rounded-xl overflow-hidden shrink-0">
-                      <Image
-                        src={episode.image}
-                        alt={episode.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-3">
-                        <h3 className="text-2xl font-heading text-bordeaux">
-                          {episode.title}
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={(e) => toggleFavorite(episode.id, e)}
-                            className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-                          >
-                            {favorites.includes(episode.id) ? (
-                              <HeartFillIcon className="w-5 h-5" />
-                            ) : (
-                              <Heart className="w-5 h-5" />
-                            )}
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setShowShareModal(true)
-                            }}
-                            className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-                          >
-                            <Share2 className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-terre-cuite/80 mb-4">
-                        {episode.description}
-                      </p>
-                      <div className="flex flex-wrap gap-4 text-sm text-terre-cuite/60 mb-4">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{episode.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{episode.date}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Mic className="w-4 h-4" />
-                          <span>{episode.host}</span>
-                        </div>
-                      </div>
-                      {currentEpisode.id === episode.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="border-t border-gray-100 pt-4"
-                        >
-                          <div className="flex gap-4 mb-4">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setActiveTab('comments')
-                              }}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm ${
-                                activeTab === 'comments' 
-                                  ? 'bg-terre-cuite text-white' 
-                                  : 'text-terre-cuite hover:bg-terre-cuite/10'
-                              }`}
-                            >
-                              <MessageCircle className="w-4 h-4" />
-                              Commentaires ({episode.comments?.length || 0})
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setActiveTab('transcription')
-                              }}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm ${
-                                activeTab === 'transcription' 
-                                  ? 'bg-terre-cuite text-white' 
-                                  : 'text-terre-cuite hover:bg-terre-cuite/10'
-                              }`}
-                            >
-                              <FileText className="w-4 h-4" />
-                              Transcription
-                            </button>
-                          </div>
-
-                          {activeTab === 'comments' ? (
-                            <div className="space-y-4" onClick={e => e.stopPropagation()}>
-                              <form 
-                                onSubmit={(e) => handleComment(e, episode.id)} 
-                                className="flex gap-2"
-                              >
-                                <input
-                                  type="text"
-                                  value={newComment}
-                                  onChange={(e) => setNewComment(e.target.value)}
-                                  placeholder="Ajouter un commentaire..."
-                                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-terre-cuite/20 focus:border-terre-cuite"
-                                />
-                                <button
-                                  type="submit"
-                                  className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-                                >
-                                  <Send className="w-5 h-5" />
-                                </button>
-                              </form>
-                              <div className="max-h-60 overflow-y-auto">
-                                {episode.comments?.map((comment) => (
-                                  <div key={comment.id} className="bg-beige-clair/10 rounded-lg p-4 mb-2">
-                                    <div className="flex justify-between items-center mb-2">
-                                      <span className="font-medium text-bordeaux">{comment.author}</span>
-                                      <span className="text-sm text-terre-cuite/60">{comment.date}</span>
-                                    </div>
-                                    <p className="text-terre-cuite/80">{comment.content}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <div 
-                              className="bg-beige-clair/10 rounded-lg p-4"
-                              onClick={e => e.stopPropagation()}
-                            >
-                              <div className="flex justify-between items-center mb-4">
-                                <span className="text-sm text-terre-cuite/60">
-                                  {getReadingTime(episode.transcription)}
-                                </span>
-                                <button
-                                  onClick={() => downloadTranscription(episode)}
-                                  className="flex items-center gap-2 px-4 py-2 rounded-full text-sm bg-terre-cuite/10 text-terre-cuite hover:bg-terre-cuite/20 transition-colors"
-                                >
-                                  <Download className="w-4 h-4" />
-                                  Télécharger
-                                </button>
-                              </div>
-                              <pre className="whitespace-pre-wrap text-terre-cuite/80 font-sans">
-                                {episode.transcription}
-                              </pre>
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Audio Player */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50"
-      >
-        <div className="container mx-auto max-w-6xl px-4 py-4">
-          <div className="flex items-center gap-6">
-            <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0">
-              <Image
-                src={currentEpisode.image}
-                alt={currentEpisode.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-heading text-bordeaux truncate">
-                {currentEpisode.title}
-              </h4>
-              <p className="text-sm text-terre-cuite/60 truncate">
-                {currentEpisode.host}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => {/* Logique pour reculer de 10s */}}
-                className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-              >
-                <SkipBack className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="p-3 bg-terre-cuite text-white rounded-full hover:bg-bordeaux transition-colors"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6" />
-                ) : (
-                  <Play className="w-6 h-6" />
-                )}
-              </button>
-              <button
-                onClick={() => {/* Logique pour avancer de 10s */}}
-                className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-              >
-                <SkipForward className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="flex-1 flex items-center gap-4">
-              <span className="text-sm text-terre-cuite/60 w-12">
-                {formatTime(currentTime)}
-              </span>
-              <div className="flex-1 h-2 bg-beige-clair/20 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-terre-cuite"
-                  style={{ width: `${(currentTime / duration) * 100}%` }}
-                />
-              </div>
-              <span className="text-sm text-terre-cuite/60 w-12">
-                {formatTime(duration)}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 w-32">
-              <Volume2 className="w-5 h-5 text-terre-cuite" />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={volume}
-                onChange={(e) => setVolume(parseInt(e.target.value))}
-                className="flex-1 h-2 bg-beige-clair/20 rounded-full overflow-hidden appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-terre-cuite"
-              />
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Modal de partage */}
-      {showShareModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl p-6 max-w-md w-full mx-4"
-          >
-            <h3 className="text-xl font-heading text-bordeaux mb-4">
-              Partager cet épisode
-            </h3>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {shareOptions.map((option) => (
-                <button
-                  key={option.name}
-                  onClick={() => shareOnSocial(option.name.toLowerCase())}
-                  className={`${option.color} text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity`}
-                >
-                  <option.icon className="w-5 h-5" />
-                  <span>{option.name}</span>
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={currentEpisode.spotifyUrl}
-                readOnly
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 bg-gray-50"
-              />
-              <button
-                onClick={() => copyLink(currentEpisode.spotifyUrl)}
-                className="p-2 text-terre-cuite hover:text-bordeaux transition-colors"
-              >
-                <Copy className="w-5 h-5" />
-              </button>
-            </div>
-            <button
-              onClick={() => setShowShareModal(false)}
-              className="mt-4 w-full px-4 py-2 rounded-lg border border-gray-200 text-terre-cuite hover:bg-beige-clair/10 transition-colors"
-            >
-              Fermer
-            </button>
-          </motion.div>
-        </div>
-      )}
+      {/* Liste des épisodes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {episodes.map(episode => (
+          <EpisodeCard
+            key={episode.id}
+            episode={episode}
+            isActive={currentEpisode.id === episode.id}
+            onClick={() => setCurrentEpisode(episode)}
+          />
+        ))}
+      </div>
     </div>
   )
 }
