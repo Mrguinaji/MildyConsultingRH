@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Play, Pause, Volume2, SkipBack, SkipForward, Clock, Mic, Calendar,
@@ -194,61 +194,113 @@ const platformIcons = {
   heartFill: HeartFillIcon
 }
 
-const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[0], isActive: boolean, onClick: () => void }) => (
-  <div 
-    className={`relative bg-white rounded-xl shadow-md overflow-hidden transition-all ${
-      isActive ? 'ring-2 ring-bordeaux' : 'hover:shadow-lg'
-    }`}
-  >
-    <div className="relative aspect-[4/5] w-full group cursor-pointer" onClick={onClick}>
-      <Image
-        src={episode.image}
-        alt={episode.title}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      />
-      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-        <a
-          href={episode.spotifyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[#1DB954] text-white p-4 rounded-full hover:scale-110 transition-transform"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Play className="w-8 h-8" />
-        </a>
+const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[0], isActive: boolean, onClick: () => void }) => {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [showPlayer, setShowPlayer] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  return (
+    <div 
+      className={`relative bg-white rounded-xl shadow-md overflow-hidden transition-all ${
+        isActive ? 'ring-2 ring-bordeaux' : 'hover:shadow-lg'
+      }`}
+    >
+      <div className="relative aspect-[4/5] w-full group cursor-pointer" onClick={onClick}>
+        <Image
+          src={episode.image}
+          alt={episode.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+          <button
+            onClick={togglePlay}
+            className="bg-bordeaux text-white p-4 rounded-full hover:scale-110 transition-transform"
+          >
+            {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+          </button>
+          <a
+            href={episode.spotifyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#1DB954] text-white p-4 rounded-full hover:scale-110 transition-transform"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Music className="w-8 h-8" />
+          </a>
+        </div>
+      </div>
+      <div className="p-4">
+        <h3 className="font-heading text-lg text-bordeaux mb-2">{episode.title}</h3>
+        <p className="text-sm text-terre-cuite/80 line-clamp-2 mb-3">
+          {episode.description}
+        </p>
+        <div className="flex items-center justify-between text-xs text-terre-cuite/60">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            <span>{episode.date}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            <span>{episode.duration}</span>
+          </div>
+        </div>
+        <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+          <button
+            onClick={() => setShowPlayer(!showPlayer)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-bordeaux text-white rounded-lg hover:bg-bordeaux/90 transition-colors"
+          >
+            {showPlayer ? (
+              <>
+                <X className="w-5 h-5" />
+                <span>Masquer le lecteur</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-5 h-5" />
+                <span>Écouter sur le site</span>
+              </>
+            )}
+          </button>
+          <a
+            href={episode.spotifyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1DB954] text-white rounded-lg hover:bg-[#1DB954]/90 transition-colors"
+          >
+            <Music className="w-5 h-5" />
+            <span>Écouter sur Spotify</span>
+          </a>
+        </div>
+        {showPlayer && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <audio
+              ref={audioRef}
+              controls
+              className="w-full"
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              src={`/podcasts/${episode.id}.mp3`}
+            />
+          </div>
+        )}
       </div>
     </div>
-    <div className="p-4">
-      <h3 className="font-heading text-lg text-bordeaux mb-2">{episode.title}</h3>
-      <p className="text-sm text-terre-cuite/80 line-clamp-2 mb-3">
-        {episode.description}
-      </p>
-      <div className="flex items-center justify-between text-xs text-terre-cuite/60">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4" />
-          <span>{episode.date}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4" />
-          <span>{episode.duration}</span>
-        </div>
-      </div>
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <a
-          href={episode.spotifyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1DB954] text-white rounded-lg hover:bg-[#1DB954]/90 transition-colors"
-        >
-          <Music className="w-5 h-5" />
-          <span>Écouter sur Spotify</span>
-        </a>
-      </div>
-    </div>
-  </div>
-)
+  )
+}
 
 export default function PodcastPage() {
   const [currentEpisode, setCurrentEpisode] = useState(episodes[0])
