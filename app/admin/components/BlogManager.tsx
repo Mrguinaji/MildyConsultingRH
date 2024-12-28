@@ -19,13 +19,20 @@ interface BlogPost {
 export default function BlogManager() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    content: string
+    excerpt: string
+    coverImage: string
+    tags: string
+    status: 'draft' | 'published'
+  }>({
     title: '',
     content: '',
     excerpt: '',
     coverImage: '',
     tags: '',
-    status: 'draft' as 'draft' | 'published'
+    status: 'draft'
   })
   const [editingId, setEditingId] = useState<string | null>(null)
 
@@ -65,7 +72,8 @@ export default function BlogManager() {
         ...formData,
         slug: generateSlug(formData.title),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        publishedAt: new Date().toISOString()
+        publishedAt: new Date().toISOString(),
+        status: formData.status as 'draft' | 'published'
       }
 
       if (editingId) {
@@ -100,7 +108,7 @@ export default function BlogManager() {
     }
   }
 
-  async function handlePublish(id: string, currentStatus: string) {
+  async function handlePublish(id: string, currentStatus: 'draft' | 'published') {
     try {
       await updateDoc(doc(db, 'blog_posts', id), {
         status: currentStatus === 'draft' ? 'published' : 'draft'
@@ -118,7 +126,7 @@ export default function BlogManager() {
       excerpt: post.excerpt,
       coverImage: post.coverImage,
       tags: post.tags.join(', '),
-      status: post.status as 'draft' | 'published'
+      status: post.status
     })
     setEditingId(post.id)
   }
