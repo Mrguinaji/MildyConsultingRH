@@ -194,7 +194,7 @@ const platformIcons = {
   heartFill: HeartFillIcon
 }
 
-const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[0], isActive: boolean, onClick: () => void }) => {
+const EpisodeCard = ({ episode, isActive }: { episode: Episode, isActive: boolean }) => {
   const [showPlayer, setShowPlayer] = useState(false)
 
   // Convertir l'URL Spotify en URL d'intégration
@@ -209,7 +209,7 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
         isActive ? 'ring-2 ring-bordeaux' : 'hover:shadow-lg'
       }`}
     >
-      <div className="relative aspect-[4/5] w-full group cursor-pointer" onClick={onClick}>
+      <div className="relative aspect-[4/5] w-full group">
         <Image
           src={episode.image}
           alt={episode.title}
@@ -219,10 +219,7 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
         />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
           <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setShowPlayer(!showPlayer)
-            }}
+            onClick={() => setShowPlayer(!showPlayer)}
             className="bg-bordeaux text-white p-4 rounded-full hover:scale-110 transition-transform"
           >
             {showPlayer ? <X className="w-8 h-8" /> : <Play className="w-8 h-8" />}
@@ -232,7 +229,6 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#1DB954] text-white p-4 rounded-full hover:scale-110 transition-transform"
-            onClick={(e) => e.stopPropagation()}
           >
             <Music className="w-8 h-8" />
           </a>
@@ -299,7 +295,6 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
 }
 
 export default function PodcastPage() {
-  const [currentEpisode, setCurrentEpisode] = useState(episodes[0])
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'favorites'>('all')
   const [favorites, setFavorites] = useState<number[]>([])
@@ -326,8 +321,7 @@ export default function PodcastPage() {
   }, [searchTerm, selectedFilter, favorites])
 
   // Gestion des favoris
-  const toggleFavorite = (episodeId: number, e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleFavorite = (episodeId: number) => {
     setFavorites(prev => 
       prev.includes(episodeId)
         ? prev.filter(id => id !== episodeId)
@@ -365,12 +359,11 @@ export default function PodcastPage() {
 
       {/* Liste des épisodes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {episodes.map(episode => (
+        {filteredEpisodes.map(episode => (
           <EpisodeCard
             key={episode.id}
             episode={episode}
-            isActive={currentEpisode.id === episode.id}
-            onClick={() => setCurrentEpisode(episode)}
+            isActive={favorites.includes(episode.id)}
           />
         ))}
       </div>
