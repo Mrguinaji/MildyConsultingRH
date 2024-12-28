@@ -54,7 +54,7 @@ export default function DashboardStats() {
       const consultations = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-      }))
+      })) as Consultation[]
 
       // Convertir en CSV
       const headers = [
@@ -77,7 +77,7 @@ export default function DashboardStats() {
         c.type === 'free' ? 'Découverte' : 'Standard',
         c.status === 'pending' ? 'En attente' : c.status === 'completed' ? 'Terminé' : 'Annulé',
         c.questionnaireSubmitted ? 'Oui' : 'Non',
-        new Date(c.createdAt.seconds * 1000).toLocaleString(),
+        c.createdAt instanceof Date ? c.createdAt.toLocaleString() : new Date(c.createdAt).toLocaleString(),
       ])
       const csv = [
         headers.join(','),
