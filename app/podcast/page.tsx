@@ -195,20 +195,12 @@ const platformIcons = {
 }
 
 const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[0], isActive: boolean, onClick: () => void }) => {
-  const [isPlaying, setIsPlaying] = useState(false)
   const [showPlayer, setShowPlayer] = useState(false)
-  const audioRef = useRef<HTMLAudioElement>(null)
 
-  const togglePlay = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
+  // Convertir l'URL Spotify en URL d'intégration
+  const getEmbedUrl = (spotifyUrl: string) => {
+    const episodeId = spotifyUrl.split('/').pop()?.split('?')[0]
+    return `https://open.spotify.com/embed/episode/${episodeId}`
   }
 
   return (
@@ -227,10 +219,13 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
         />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
           <button
-            onClick={togglePlay}
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowPlayer(!showPlayer)
+            }}
             className="bg-bordeaux text-white p-4 rounded-full hover:scale-110 transition-transform"
           >
-            {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+            {showPlayer ? <X className="w-8 h-8" /> : <Play className="w-8 h-8" />}
           </button>
           <a
             href={episode.spotifyUrl}
@@ -287,13 +282,14 @@ const EpisodeCard = ({ episode, isActive, onClick }: { episode: typeof episodes[
         </div>
         {showPlayer && (
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <audio
-              ref={audioRef}
-              controls
-              className="w-full"
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              src={`/podcasts/${episode.id}.mp3`}
+            <iframe
+              src={getEmbedUrl(episode.spotifyUrl)}
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              className="w-full rounded-lg"
             />
           </div>
         )}
