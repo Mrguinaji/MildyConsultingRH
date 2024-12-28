@@ -120,14 +120,16 @@ export default function BlogManager() {
   }
 
   function handleEdit(post: BlogPost) {
-    setFormData({
+    const newFormData = {
       title: post.title,
       content: post.content,
       excerpt: post.excerpt,
       coverImage: post.coverImage,
       tags: post.tags.join(', '),
       status: post.status
-    })
+    } satisfies typeof formData;
+    
+    setFormData(newFormData)
     setEditingId(post.id)
   }
 
