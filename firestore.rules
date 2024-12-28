@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fonctions de validation communes
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isOwner(resource) {
+      return isAuthenticated() && 
+        resource.data.customerEmail == request.auth.token.email;
+    }
+
+    // Règles pour les consultations
+    match /consultations/{consultationId} {
+      allow read: if isAdmin() || isOwner(resource);
+      allow create: if true; // Permettre la création lors de la réservation
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Règles pour les réponses au questionnaire
+    match /questionnaire_responses/{responseId} {
+      allow read: if isAdmin() || isOwner(resource);
+      allow create: if isAuthenticated() && 
+        exists(/databases/$(database)/documents/consultations/$(request.resource.data.consultationId)) &&
+        get(/databases/$(database)/documents/consultations/$(request.resource.data.consultationId)).data.customerEmail == request.auth.token.email;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Règles pour les logs d'emails
+    match /email_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false; // Seul le serveur peut écrire via Admin SDK
+    }
+
+    // Règles pour les administrateurs
+    match /admins/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if false; // Géré uniquement via la console Firebase
+    }
+  }
+} 
