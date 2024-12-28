@@ -1,14 +1,21 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createConsultation } from '@/lib/firebase-utils'
+import { Resend } from 'resend'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('La clé secrète Stripe n\'est pas configurée')
 }
 
+if (!process.env.RESEND_API_KEY) {
+  throw new Error('La clé API Resend n\'est pas configurée')
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2024-12-18.acacia'
 })
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const CONSULTATION_TYPES = {
   free: {
@@ -55,6 +62,19 @@ export async function POST(request: Request) {
           questionnaireSubmitted: false
         })
         console.log('Consultation gratuite créée avec l\'ID:', consultationId)
+
+        // Envoyer l'email de confirmation
+        try {
+          await resend.emails.send({
+            from: 'Mildy Consulting RH <contact@mildyconsulting.com>',
+            to: email,
+            subject: 'Confirmation de votre consultation gratuite',
+            text: `Bonjour ${name},\n\nVotre consultation découverte a été réservée pour le ${date} à ${time}.\n\nVous recevrez bientôt un questionnaire préparatoire à remplir.\n\nCordialement,\nMildy Consulting RH`
+          })
+          console.log('Email de confirmation envoyé pour la consultation gratuite')
+        } catch (error) {
+          console.error('Erreur lors de l\'envoi de l\'email:', error)
+        }
 
         // Encodage des paramètres pour l'URL
         const params = new URLSearchParams({
