@@ -25,7 +25,7 @@ const socialPlatforms = [
   {
     name: "Spotify",
     icon: Music,
-    url: "https://open.spotify.com/show/votre-id",
+    url: "https://open.spotify.com/show/55dpWlrfAaVnvy27H8YSdh",
     color: "bg-[#1DB954]"
   },
   {
@@ -55,6 +55,31 @@ const shareOptions = [
 ]
 
 const episodes = [
+  {
+    id: 4,
+    title: "Épisode 1 : Découvrez Mildy Consulting RH",
+    description: "Dans ce premier épisode, découvrez Mildy Consulting RH, notre approche unique des ressources humaines et notre vision pour l'avenir du travail.",
+    duration: "30 min",
+    date: "28 Décembre 2023",
+    image: "/images/podcast/episode4.jpg",
+    host: "Mildy Consulting RH",
+    audioUrl: null,
+    spotifyUrl: "https://open.spotify.com/episode/55dpWlrfAaVnvy27H8YSdh",
+    transcription: `
+      [00:00] Introduction
+      Bienvenue dans le premier épisode du podcast Mildy Consulting RH...
+
+      [05:00] Notre Vision
+      Chez Mildy Consulting RH, nous croyons en une approche humaine...
+
+      [15:00] Nos Services
+      Découvrez nos services de conseil en ressources humaines...
+
+      [25:00] Conclusion
+      Merci d'avoir écouté ce premier épisode...
+    `,
+    comments: []
+  },
   {
     id: 1,
     title: "Les clés d'une reconversion professionnelle réussie",
