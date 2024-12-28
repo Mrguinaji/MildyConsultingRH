@@ -25,7 +25,7 @@ export default function BlogManager() {
     excerpt: '',
     coverImage: '',
     tags: '',
-    status: 'draft' as const
+    status: 'draft' as 'draft' | 'published'
   })
   const [editingId, setEditingId] = useState<string | null>(null)
 
@@ -118,7 +118,7 @@ export default function BlogManager() {
       excerpt: post.excerpt,
       coverImage: post.coverImage,
       tags: post.tags.join(', '),
-      status: post.status
+      status: post.status as 'draft' | 'published'
     })
     setEditingId(post.id)
   }
